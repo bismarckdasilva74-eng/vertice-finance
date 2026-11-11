@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06140f">
+<title>Vértice Finance</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#06140f;color:#f4fff9;font-family:Arial,sans-serif}
+header{padding:22px;background:#0b2118;border-bottom:1px solid #1b4935}
+.logo{font-size:23px;font-weight:bold;letter-spacing:1px}
+.logo span{color:#00d994}
+main{max-width:850px;margin:auto;padding:22px}
+.notice{background:#302b17;color:#f8e8ad;padding:15px;border:1px solid #75652c;border-radius:14px;font-size:13px;line-height:1.6}
+h1{font-size:30px;margin-top:30px}
+.green{color:#00d994}
+.muted{color:#9bb4a7}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px;margin:22px 0}
+.card{background:#10251b;border:1px solid #234333;border-radius:17px;padding:20px}
+.card small{color:#9bb4a7}
+.value{font-size:25px;font-weight:bold;margin-top:12px}
+nav{display:flex;gap:8px;overflow-x:auto;margin:25px 0}
+nav button,button{border:0;border-radius:10px;padding:13px 17px;background:#00d994;color:#062016;font-weight:bold;cursor:pointer}
+nav button{background:#142b20;color:white;white-space:nowrap}
+nav button.active{background:#00d994;color:#062016}
+section{display:none;background:#10251b;border:1px solid #234333;border-radius:16px;padding:20px}
+section.active{display:block}
+input,select{width:100%;padding:13px;margin:7px 0 14px;border-radius:9px;border:1px solid #365544;background:#07180f;color:white}
+.item{padding:13px 0;border-bottom:1px solid #294536;display:flex;justify-content:space-between;gap:10px}
+footer{text-align:center;color:#789184;font-size:12px;padding:30px}
+</style>
+</head>
+<body>
+<header><div class="logo">VÉRTICE <span>FINANCE</span></div></header>
+<main>
+<div class="notice"><b>AMBIENTE DE DEMONSTRAÇÃO</b><br>
+Todos os valores são fictícios. Este aplicativo não é um banco, não recebe dinheiro, não realiza pagamentos e não oferece crédito real. Não informe dados bancários ou senhas.</div>
+
+<p class="green"><b>PLANEJE. CONTROLE. CONQUISTE.</b></p>
+<h1>Suas finanças,<br><span class="green">em equilíbrio.</span></h1>
+<p class="muted">Organize suas receitas, despesas e objetivos.</p>
+
+<div class="cards">
+<div class="card"><small>Saldo demonstrativo</small><div class="value" id="balance">R$ 2.450,00</div></div>
+<div class="card"><small>Receitas fictícias</small><div class="value green" id="income">R$ 3.300,00</div></div>
+<div class="card"><small>Despesas fictícias</small><div class="value" id="expense">R$ 850,00</div></div>
+</div>
+
+<nav>
+<button class="active" onclick="show('overview',this)">Visão geral</button>
+<button onclick="show('transactions',this)">Lançamentos</button>
+<button onclick="show('goals',this)">Metas</button>
+<button onclick="show('simulator',this)">Simulador</button>
+</nav>
+
+<section id="overview" class="active">
+<h2>Visão geral</h2>
+<p class="muted">Bem-vindo à sua área financeira demonstrativa.</p>
+<h3>Últimos lançamentos</h3>
+<div id="recent"></div>
+</section>
+
+<section id="transactions">
+<h2>Novo lançamento fictício</h2>
+<label>Descrição</label>
+<input id="description" placeholder="Ex.: Mercado">
+<label>Valor em reais</label>
+<input id="amount" type="number" min="0.01" step="0.01" placeholder="Ex.: 100">
+<label>Tipo</label>
+<select id="type"><option value="expense">Despesa</option><option value="income">Receita</option></select>
+<button onclick="addTransaction()">Adicionar lançamento</button>
+<div id="history"></div>
+</section>
+
+<section id="goals">
+<h2>Minhas metas</h2>
+<p>Meta demonstrativa: Reserva de emergência</p>
+<div class="card">
+<div class="value green">R$ 2.000,00</div>
+<p class="muted">Objetivo fictício de economia</p>
+<progress value="65" max="100" style="width:100%;accent-color:#00d994"></progress>
+<p>65% concluído</p>
+</div>
+</section>
+
+<section id="simulator">
+<h2>Simulador educativo</h2>
+<label>Quanto pretende guardar por mês?</label>
+<input id="monthly" type="number" min="0" placeholder="Ex.: 200">
+<label>Durante quantos meses?</label>
+<input id="months" type="number" min="1" placeholder="Ex.: 12">
+<button onclick="simulate()">Calcular</button>
+<h3 id="result" class="green"></h3>
+<p class="muted">Simulação simples, sem rendimento ou promessa de retorno.</p>
+</section>
+</main>
+<footer>Vértice Finance • Protótipo educativo 1.0</footer>
+
+<script>
+let transactions=[
+{description:"Salário de exemplo",amount:3300,type:"income"},
+{description:"Moradia de exemplo",amount:350,type:"expense"},
+{description:"Alimentação de exemplo",amount:500,type:"expense"}
+];
+function money(v){return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function show(id,btn){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+btn.classList.add("active");
+}
+function render(){
+let income=transactions.filter(t=>t.type==="income").reduce((s,t)=>s+t.amount,0);
+let expense=transactions.filter(t=>t.type==="expense").reduce((s,t)=>s+t.amount,0);
+document.getElementById("income").textContent=money(income);
+document.getElementById("expense").textContent=money(expense);
+document.getElementById("balance").textContent=money(income-expense);
+let html=transactions.map(t=>`<div class="item"><span>${t.description}</span><b style="color:${t.type==="income"?"#00d994":"#ff8585"}">${t.type==="income"?"+":"−"} ${money(t.amount)}</b></div>`).join("");
+document.getElementById("history").innerHTML=html;
+document.getElementById("recent").innerHTML=html;
+}
+function addTransaction(){
+let description=document.getElementById("description").value.trim();
+let amount=Number(document.getElementById("amount").value);
+let type=document.getElementById("type").value;
+if(!description||!Number.isFinite(amount)||amount<=0){alert("Preencha a descrição e um valor válido.");return}
+transactions.unshift({description,amount,type});
+document.getElementById("description").value="";
+document.getElementById("amount").value="";
+render();
+}
+function simulate(){
+let monthly=Number(document.getElementById("monthly").value);
+let months=Number(document.getElementById("months").value);
+if(monthly<=0||months<=0){alert("Informe valores válidos.");return}
+document.getElementById("result").textContent="Total guardado: "+money(monthly*months);
+}
+render();
+</script>
+</body>
+</html>
