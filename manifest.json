@@ -1,0 +1,12 @@
+
+{
+  "name": "Vértice Finance",
+  "short_name": "Vértice",
+  "description": "Organização financeira e educação financeira.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06140f",
+  "theme_color": "#06140f"
+}
